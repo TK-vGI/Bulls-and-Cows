@@ -1,0 +1,48 @@
+package bullscows;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        String secretCode = "9305";
+        char[] secCodeArr = secretCode.toCharArray();
+
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        char[] inputArr = input.toCharArray();
+
+        int cowCounter = 0;
+        int bullCounter = 0;
+        for (int i = 0; i < 4;i++){
+            for (int j =0; j < 4;j++){
+                if (inputArr[i] == secCodeArr[j] && i == j) {
+                    bullCounter++;
+                }
+                if (inputArr[i] == secCodeArr[j] && i != j) {
+                    cowCounter++;
+                }
+            }
+        }
+
+//        System.out.println("b: " + bullCounter + ", c: " + cowCounter);
+
+        printGrade(bullCounter,cowCounter);
+    }
+
+    public static void printGrade(int bulls, int cows){
+        String grade = null;
+        if (bulls == 0 && cows == 0) {
+            grade = "Grade: None. The secret code is 9305.";
+        } else if (bulls >= 1 && cows == 0) {
+            grade = String.format("Grade: %d bull(s). The secret code is 9305.", bulls);
+
+        } else if (bulls == 0 && cows >= 1) {
+            grade = String.format("Grade: %d cow(s). The secret code is 9305.", cows);
+
+        } else if (bulls >= 1 && cows >= 1) {
+            grade = String.format("Grade: %d bull(s) and %d cow(s). The secret code is 9305.", bulls, cows);
+        }
+
+        System.out.println(grade);
+    }
+}

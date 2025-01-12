@@ -1,0 +1,102 @@
+package bullscows;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String code = generateCode(scanner);
+        System.out.println("Secret code is: " + code);
+
+        System.out.println("Okay, let's start a game!");
+        int turnCounter = 1;
+        do {
+            turnCounter(turnCounter);
+            String guess = getUserInput(scanner);
+            int[] counterBC = Grade(guess, code);
+            if (counterBC[0] == guess.length()) {
+                printGrade(counterBC);
+                System.out.println("Congratulations! You guessed the secret code.");
+                break;
+            } else {
+                printGrade(counterBC);
+                turnCounter++;
+            }
+        } while(true);
+    }
+
+    private static int[] Grade(String guess,String code) {
+        char[] inputArr = guess.toCharArray();
+        char[] secCodeArr = code.toCharArray();
+        int bullCounter = 0;
+        int cowCounter = 0;
+        for (int i = 0; i < guess.length();i++){
+            for (int j =0; j < code.length();j++){
+                if (inputArr[i] == secCodeArr[j] && i == j) {
+                    bullCounter++;
+                }
+                if (inputArr[i] == secCodeArr[j] && i != j) {
+                    cowCounter++;
+                }
+            }
+        }
+        return new int[]{bullCounter, cowCounter};
+    }
+
+    public static void printGrade(int[] counterBC){
+        String grade = null;
+        int bulls = counterBC[0];
+        int cows = counterBC[1];
+        String bu = bulls > 1 ? "bulls" : "bull";
+        String co = cows > 1 ? "cows" : "cow";
+
+        if (bulls == 0 && cows == 0) {
+            grade = "Grade: None";
+        } else if (bulls >= 1 && cows == 0) {
+            grade = String.format("Grade: %d %s", bulls, bu);
+
+        } else if (bulls == 0 && cows >= 1) {
+            grade = String.format("Grade: %d %s", cows, co);
+
+        } else if (bulls >= 1 && cows >= 1) {
+            grade = String.format("Grade: %d %s and %d %s", bulls, bu, cows, co);
+        }
+
+        System.out.println(grade);
+    }
+
+    private static String getUserInput(Scanner scanner) {
+        return scanner.next();
+    }
+
+    private static String generateCode(Scanner scanner){
+        Random random = new Random();
+        StringBuilder code = new StringBuilder();
+        do {
+            System.out.println("Please, enter the secret code's length:");
+            int userInput = scanner.nextInt();
+            if (userInput > 10) {
+                System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.%n",userInput);
+            } else {
+                for (int i = 0; i < userInput; ) {
+                    int pseudo = random.nextInt(10);
+                    if (i == 0 && pseudo == 0) {
+                    } else if (code.toString().contains(Integer.toString(pseudo))) {
+                    } else {
+                        code.append(pseudo);
+                        ++i;
+                    }
+                }
+                break;
+            }
+        }while(true);
+
+        return String.valueOf(code);
+    }
+
+    private static void turnCounter(int counter) {
+        System.out.printf("Turn %d:%n",counter);
+    }
+}
